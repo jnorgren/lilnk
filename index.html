@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -65,19 +66,20 @@
         }
     </style>
     <script>
-        document.addEventListener("DOMContentLoaded", function() {
+        document.addEventListener("DOMContentLoaded", function () {
             const form = document.getElementById("urlShortenerForm");
             const resultDisplay = document.getElementById("resultDisplay");
+            const copyButton = document.getElementById("copyButton");
 
-            form.addEventListener("submit", function(event) {
+            form.addEventListener("submit", function (event) {
                 event.preventDefault();
-                
+
                 const urlInput = document.getElementById("url").value;
-                
+
                 const requestBody = JSON.stringify({
                     "longUrl": urlInput
                 });
-                
+
                 fetch("api/shorten", {
                     method: "POST",
                     headers: {
@@ -85,18 +87,33 @@
                     },
                     body: requestBody
                 })
-                .then(response => response.text())
-                .then(data => {
-                    resultDisplay.textContent = "Shortened URL: " + data;
-                })
-                .catch(error => {
-                    console.error("Error:", error);
-                    resultDisplay.textContent = "Error shortening URL. See console for details.";
+                    .then(response => response.text())
+                    .then(data => {
+                        resultDisplay.textContent = "Shortened URL: " + data;
+                        copyButton.style.display = 'block'; // Show the copy button
+                    })
+                    .catch(error => {
+                        console.error("Error:", error);
+                        resultDisplay.textContent = "Error shortening URL. See console for details.";
+                        copyButton.style.display = 'none'; // Hide the copy button on error
+                    });
+            });
+
+            // Copy to Clipboard functionality
+            copyButton.addEventListener('click', function () {
+                navigator.clipboard.writeText(resultDisplay.textContent)
+                    .then(() => {
+                        alert('Copied to clipboard!');
+                    })
+                    .catch(err => {
+                        console.error('Failed to copy: ', err);
                 });
             });
         });
+
     </script>
 </head>
+
 <body>
     <h2>URL Shortener</h2>
     <form id="urlShortenerForm">
@@ -106,4 +123,5 @@
     </form>
     <p id="resultDisplay"></p>
 </body>
+
 </html>

@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>URL Shortener Form</title>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const form = document.getElementById("urlShortenerForm");
+            const resultDisplay = document.getElementById("resultDisplay"); // Get the display element for the result
+
+            form.addEventListener("submit", function(event) {
+                event.preventDefault(); // Prevent the default form submission
+                
+                const urlInput = document.getElementById("url").value; // Get the URL entered in the form
+                
+                // Format the request body as JSON
+                const requestBody = JSON.stringify({
+                    "longUrl": urlInput
+                });
+                
+                // Use fetch to send the request with JSON body
+                fetch("shorten", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: requestBody
+                })
+                .then(response => response.text())
+                .then(data => {
+                    resultDisplay.textContent = "Shortened URL: " + data; // Display the shortened URL on the page
+                })
+                .catch(error => {
+                    console.error("Error:", error);
+                    resultDisplay.textContent = "Error shortening URL. See console for details.";
+                });
+            });
+        });
+    </script>
+</head>
+<body>
+    <h2>URL Shortener</h2>
+    <form id="urlShortenerForm">
+        <label for="url">Enter URL:</label><br>
+        <input type="text" id="url" name="url" required><br><br>
+        <input type="submit" value="Shorten URL">
+    </form>
+    <p id="resultDisplay"></p> <!-- Placeholder for displaying the result -->
+</body>
+</html>

@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -32,7 +31,7 @@
             color: #333;
         }
 
-        input[type="text"] {
+        input[type="text"], button {
             width: 100%;
             padding: 10px;
             margin-top: 8px;
@@ -42,7 +41,7 @@
             box-sizing: border-box;
         }
 
-        input[type="submit"] {
+        input[type="submit"], button {
             width: 100%;
             background-color: #007bff;
             color: white;
@@ -53,7 +52,7 @@
             cursor: pointer;
         }
 
-        input[type="submit"]:hover {
+        input[type="submit"]:hover, button:hover {
             background-color: #0056b3;
         }
 
@@ -64,22 +63,31 @@
             border-radius: 4px;
             color: #333;
         }
+        
+        #copyButton {
+            display: none; /* Hide button initially */
+            background-color: #4CAF50; /* Different color for copy button */
+        }
+
+        #copyButton:hover {
+            background-color: #45a049;
+        }
     </style>
     <script>
-        document.addEventListener("DOMContentLoaded", function () {
+        document.addEventListener("DOMContentLoaded", function() {
             const form = document.getElementById("urlShortenerForm");
             const resultDisplay = document.getElementById("resultDisplay");
             const copyButton = document.getElementById("copyButton");
 
-            form.addEventListener("submit", function (event) {
+            form.addEventListener("submit", function(event) {
                 event.preventDefault();
-
+                
                 const urlInput = document.getElementById("url").value;
-
+                
                 const requestBody = JSON.stringify({
                     "longUrl": urlInput
                 });
-
+                
                 fetch("api/shorten", {
                     method: "POST",
                     headers: {
@@ -87,33 +95,31 @@
                     },
                     body: requestBody
                 })
-                    .then(response => response.text())
-                    .then(data => {
-                        resultDisplay.textContent = "Shortened URL: " + data;
-                        copyButton.style.display = 'block'; // Show the copy button
-                    })
-                    .catch(error => {
-                        console.error("Error:", error);
-                        resultDisplay.textContent = "Error shortening URL. See console for details.";
-                        copyButton.style.display = 'none'; // Hide the copy button on error
-                    });
+                .then(response => response.text())
+                .then(data => {
+                    resultDisplay.textContent = "Shortened URL: " + data;
+                    copyButton.style.display = 'block'; // Show the copy button
+                })
+                .catch(error => {
+                    console.error("Error:", error);
+                    resultDisplay.textContent = "Error shortening URL. See console for details.";
+                    copyButton.style.display = 'none'; // Hide the copy button on error
+                });
             });
 
             // Copy to Clipboard functionality
-            copyButton.addEventListener('click', function () {
+            copyButton.addEventListener('click', function() {
                 navigator.clipboard.writeText(resultDisplay.textContent)
-                    .then(() => {
-                        alert('Copied to clipboard!');
-                    })
-                    .catch(err => {
-                        console.error('Failed to copy: ', err);
+                .then(() => {
+                    alert('Copied to clipboard!');
+                })
+                .catch(err => {
+                    console.error('Failed to copy: ', err);
                 });
             });
         });
-
     </script>
 </head>
-
 <body>
     <h2>URL Shortener</h2>
     <form id="urlShortenerForm">
@@ -122,6 +128,6 @@
         <input type="submit" value="Shorten URL">
     </form>
     <p id="resultDisplay"></p>
+    <button id="copyButton">Copy to Clipboard</button>
 </body>
-
 </html>

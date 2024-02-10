@@ -97,8 +97,9 @@
                 })
                 .then(response => response.text())
                 .then(data => {
-                    resultDisplay.textContent = data;
+                    resultDisplay.textContent = "Shortened URL: " + data;
                     copyButton.style.display = 'block'; // Show the copy button
+                    copyButton.textContent = 'Copy to Clipboard'; // Reset button text in case it was changed
                 })
                 .catch(error => {
                     console.error("Error:", error);
@@ -111,10 +112,13 @@
             copyButton.addEventListener('click', function() {
                 navigator.clipboard.writeText(resultDisplay.textContent)
                 .then(() => {
-                    alert('Copied to clipboard!');
+                    copyButton.textContent = 'Copied!'; // Change button text on successful copy
+                    setTimeout(() => copyButton.textContent = 'Copy to Clipboard', 2000); // Reset text after 2 seconds
                 })
                 .catch(err => {
                     console.error('Failed to copy: ', err);
+                    copyButton.textContent = 'Failed to copy'; // Indicate failure on the button
+                    setTimeout(() => copyButton.textContent = 'Copy to Clipboard', 2000); // Reset text after 2 seconds
                 });
             });
         });

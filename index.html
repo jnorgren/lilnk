@@ -97,7 +97,7 @@
                 })
                 .then(response => response.text())
                 .then(data => {
-                    resultDisplay.textContent = "Shortened URL: " + data;
+                    resultDisplay.textContent = data;
                     copyButton.style.display = 'block'; // Show the copy button
                 })
                 .catch(error => {
